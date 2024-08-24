@@ -16,6 +16,9 @@
 </head>
 
 <body>
+  <a href="../">
+    <button>Back</button>
+  </a>
   <h2 class="text-center">Quiz App</h2>
 
   <div class="d-flex justify-content-center">
@@ -147,7 +150,7 @@
     $("#score_text").html(`score : ${my_score} / ${my_count * 4}`);
     // $('#score_text').html('score : ' + my_score);
 
-    $("#counter_text").html(`set number : ${my_count+1} / 5`);
+    $("#counter_text").html(`set number : ${my_count + 1} / 5`);
     function do_submit() {
       // >>> hide submit button & show next button
       $("#btn-submit").addClass('d-none');

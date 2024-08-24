@@ -11,6 +11,9 @@
 </head>
 
 <body class="m-4">
+    <a href="../">
+        <button>Back</button>
+    </a>
     <h1 class="bg-warning">Hello Calculator v1</h1>
     <br />
 
@@ -41,18 +44,18 @@
             document.getElementById("out").value = result;
             document.getElementById("ready").value = "Added";
         }
-        
+
         function do_min() {
             let val1 = document.getElementById("in1").value;
             let val2 = document.getElementById("in2").value;
 
-         
+
             document.getElementById("ready").value = "Subtracted";
 
             let result = parseFloat(val1) - parseFloat(val2);
             document.getElementById("out").value = result;
         }
-        
+
         function do_multi() {
             let val1 = document.getElementById("in1").value;
             let val2 = document.getElementById("in2").value;
@@ -60,7 +63,7 @@
             let result = parseFloat(val1) * parseFloat(val2);
             document.getElementById("out").value = result;
         }
-        
+
         function do_div() {
             let val1 = document.getElementById("in1").value;
             let val2 = document.getElementById("in2").value;
