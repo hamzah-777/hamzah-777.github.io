@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <style>
+        .list-group-item {
+            color: rgb(237, 203, 13);
+
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: rgb(255, 0, 0);
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="./">
+        <button>Back</button>
+    </a>
+
+    <div class="container mt-5">
+        <h1>Welcome Blog Admin!</h1>
+
+        <div class="mb-3">
+            <input type="text" id="titleInput" class="form-control" placeholder="Article Title" />
+            <input type="text" id="imglinkInput" class="form-control" placeholder="Image Link" />
+            <input type="text" id="contentInput" class="form-control" placeholder="Content" />
+        </div>
+
+        <div class="d-flex">
+            <button id="addItemBtn" class=" btn  mx-1"
+                style="color:rgb(255, 255, 255); background-color: blueviolet;">Add Article ➕</button>
+            <button id="refreshBtn" class="btn btn-success mx-1" onclick="location.reload()">Refresh 🔄</button>
+            <button id="deleteAllBtn" class="ms-auto btn btn-danger mx-1 shadow ">Delete All 😎 </button>
+        </div>
+
+        <div class="mt-3">
+            <ul id="itemList" class="list-group">
+                <!-- Checklist items will be added here dynamically -->
+            </ul>
+        </div>
+
+        <div class="mt-5 d-flex justify-content-end">
+            <button id="printBtn" class="btn btn-sm btn-info ">Send to Print 🖨️</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        const userInput = prompt('Please enter the password:');
+
+
+
+        // Load checklist items from local storage on page load
+        $(document).ready(function () {
+            loadChecklistItems();
+        });
+
+        // Add item to checklist
+        $("#addItemBtn").click(function () {
+            console.log("add");
+            var newItemText1 = $("#titleInput").val();
+            var newItemText2 = $("#imglinkInput").val();
+            var newItemText3 = $("#contentInput").val();
+
+            if (newItemText1 !== "" && newItemText2 !== "" && newItemText3 !== "") {
+                addItemToBlogList(newItemText1, newItemText2, newItemText3);
+                $("#itemInput").val(""); // Clear the input field
+            } else {
+                window.alert('All fields must be filled.');
+            }
+        });
+
+        // Function to load checklist items from local storage
+        function loadChecklistItems() {
+            $("#itemList").text(''); //start with cleaning section
+
+            var blogItems =
+                JSON.parse(localStorage.getItem("blogItems")) || [];
+            blogItems.forEach(function (item) {
+                // addItemToBlogList(item.text, item.completed);
+                var itemId = item.id;
+                var title = item.title;
+                var img = item.img;
+                var content = item.content;
+
+                var formattedDate = moment(itemId).format('Do MMMM YYYY HH:MM:SS');
+
+                var listItem = `
+    <div class="m-1 p-2 border border-secondary">
+
+        <div class="d-flex">
+        <h3 class="mx-1">${title} </h3>
+        <button class="btn btn-sm btn-dark btn-sm delete-item ms-auto" data-item-id="${itemId}">❌</button> 
+        </div>
+
+        <div class="d-flex align-items-start">
+            <img width="30%" src="${img}" alt="" class="me-3">
+        <div>
+        <p>${content}</p>
+        
+    </div>
+    
+            	`;
+
+                $("#itemList").append(listItem);
+            });
+        }
+
+        // Function to add an item to the checklist
+        var itemId = Date.now(); // Generate a unique ID for the item
+        function addItemToBlogList(title, img, content) {
+
+            // Check for duplicates before adding an item
+            var blogItems =
+                JSON.parse(localStorage.getItem("blogItems")) || [];
+            var duplicateItem = blogItems.find(function (item) {
+                return item.title === title;
+            });
+
+            if (title == '') {
+                console.log("Empty item refused.");
+                alert("Empty item refused.");
+
+            } else if (!duplicateItem) {
+                // Save the NEW item to local storage
+                var blogItems =
+                    JSON.parse(localStorage.getItem("blogItems")) || [];
+
+                blogItems.push({ id: itemId, title: title, img: img, content: content });
+
+                localStorage.setItem(
+                    "blogItems",
+                    JSON.stringify(blogItems)
+                );
+
+                // draw/reload checklist items to web-page
+                loadChecklistItems();
+            } else {
+                console.log("Duplicate item refused.");
+                alert("Duplicate item refused.");
+            }
+        }
+
+        // Handle delete item button click
+        $(document).on("click", ".delete-item", function () {
+            var itemId = $(this).data("item-id");
+            console.log("onchange delete: " + itemId);
+            deleteItem(itemId);
+            loadChecklistItems()
+        });
+
+        // Function to delete an item from the checklist
+        function deleteItem(itemId) {
+            var blogItems =
+                JSON.parse(localStorage.getItem("blogItems")) || [];
+            var itemIndex = blogItems.findIndex(function (item) {
+                return item.id === itemId;
+            });
+            if (itemIndex !== -1) {
+                blogItems.splice(itemIndex, 1);
+                localStorage.setItem(
+                    "blogItems",
+                    JSON.stringify(blogItems)
+                );
+
+                // Remove the item from the UI
+                $(`[data-item-id="${itemId}"]`).remove();
+            }
+        }
+
+
+        $("#deleteAllBtn").click(function () {
+            console.log("Delete All btn clicked");
+            alert("Delete All btn clicked");
+            localStorage.removeItem("blogItems"); // Clear blogItems from local storage
+            location.reload(); //refresh page
+        });
+
+        $("#printBtn").click(function () {
+            console.log("Print  btn clicked");
+            window.print()
+        });
+
+    </script>
+</body>
+
+</html>

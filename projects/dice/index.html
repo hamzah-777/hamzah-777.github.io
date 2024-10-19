@@ -22,6 +22,7 @@
             <img src="1.png" alt="" id="dice_1" />
             <img src="1.png" alt="" id="dice_2" />
             <img src="1.png" alt="" id="dice_3" />
+            <img src="1.png" alt="" id="dice_4" />
         </div>
 
         <div class="pt-3">
@@ -34,20 +35,29 @@
             return Math.floor(Math.random() * 6) + 1;
         }
 
+        function getRandomNumberOdd() {
+            // cheat mode
+            return (Math.floor(Math.random() * 3) * 2) + 1;
+        }
+        function getRandomNumber45() {
+            return Math.floor(Math.random() * 2) + 5;
+        }
+
         $("#my_button").on("click", function () {
             // add the logic to randomly generate 2 numbers (between 1-6)
             // Function to generate a random number between 1 and 6
 
             // Generate two random numbers
             let randomNumber1 = getRandomNumber();
-            let randomNumber2 = getRandomNumber();
-            let randomNumber3 = getRandomNumber();
+            let randomNumber2 = getRandomNumberOdd() + 1;
+            let randomNumber3 = getRandomNumberOdd();
+            let randomNumber4 = getRandomNumber45();
 
 
             $("#dice_1").attr("src", randomNumber1 + ".png");
             $("#dice_2").attr("src", randomNumber2 + ".png");
             $("#dice_3").attr("src", randomNumber3 + ".png");
-
+            $("#dice_4").attr("src", randomNumber4 + ".png");
             //on button click & display images accordigly
         });
     </script>
