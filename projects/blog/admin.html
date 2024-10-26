@@ -59,12 +59,31 @@
 
 
     <script>
+        // console.log(btoa('raw_pw')); //ENCODE PW using this!!!
+
+        // Display prompt and capture user input
         const userInput = prompt('Please enter the password:');
-
-
+        const secretPw = 'cG90YXRv';
 
         // Load checklist items from local storage on page load
         $(document).ready(function () {
+            // Check if user provided input
+            if (userInput === null) {
+                alert('Password is required');
+                //REDIRECT BACK
+                window.location.pathname = '/projects/blog/';
+            } else {
+                const encodedInput = btoa(userInput);
+                if (encodedInput === secretPw) {
+                    //PASSWORD WAS CORRECT - ALL GOOD
+                    console.log('Password is correct');
+                } else {
+                    alert('Password is incorrect');
+                    //REDIRECT BACK
+                    window.location.pathname = '/projects/blog/';
+                }
+            }
+
             loadChecklistItems();
         });
 
